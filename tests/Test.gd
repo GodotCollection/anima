@@ -1,17 +1,18 @@
 extends Control
 
 func _ready():
+	print(get_tree())
 	var anima: AnimaNode = Anima.begin_single_shot(self)
-	anima.then(
-		Anima.Node($RichTextLabel) \
-			.anima_animation("typewrite") \
-			.anima_duration(0.3)
-	)
-	anima.also({
-		property = "opacity",
-		from = 0.0,
-		to = 1.0,
-	})
+#	anima.then(
+#		Anima.Node($RichTextLabel) \
+#			.anima_animation("typewrite") \
+#			.anima_duration(0.3)
+#	)
+#	anima.also({
+#		property = "opacity",
+#		from = 0.0,
+#		to = 1.0,
+#	})
 	anima.then(
 		Anima.Node($Button) \
 		.anima_duration(0.3) \
@@ -24,15 +25,18 @@ func _ready():
 				100: {
 					y = 0,
 					opacity = 1,
-					easing = Anima.EASING.EASE_IN_OUT_BACK
+#					easing = Anima.EASING.EASE_IN_OUT_BACK
 				},
-				initial_values = {
+				"initial_values": {
 					opacity = 0,
 				}
 			}
 		)
 	)
-	
+
+	var tween = get_tree().create_tween()
+	tween.tween_property($Control/Button2, "modulate", Color.RED, 1)
+
 #	anima.also(
 #		Anima.Group($Control) \
 #			.anima_animation("zoomIn") \

@@ -1,4 +1,3 @@
-tool
 extends Node
 
 enum PORT {
@@ -20,14 +19,14 @@ enum NODE_TYPE {
 	MUSIC
 }
 
-const PORT_COLOR = {
-	PORT_TYPE.LABEL_ONLY: Color.transparent,
+var PORT_COLOR = {
+	PORT_TYPE.LABEL_ONLY: Color.TRANSPARENT,
 	PORT_TYPE.ANIMATION: Color('#008484'),
 	PORT_TYPE.EVENT: Color('#eb8937'),
 	PORT_TYPE.ACTION: Color('#417799'),
 }
 
-const NODE_TYPE_COLOR = {
+var NODE_TYPE_COLOR = {
 	NODE_TYPE.START: Color('#008484'),
 	NODE_TYPE.ANIMATION: Color('#737f96'),
 	NODE_TYPE.ACTION: Color('#2f384d'),
@@ -51,7 +50,7 @@ const TITLE_MARGIN_BOTTOM = TITLE_MARGIN_TOP + TITLE_BORDER_WIDTH
 const FRAME_BG_COLOR = Color(0.101, 0.125, 0.172, 1.0)
 const FRAME_BG_SELECTED_COLOR = FRAME_BG_COLOR
 const FRAME_SHADOW_COLOR = Color(0, 0, 0, 0.1)
-const FRAME_SHADOW_SELECTED_COLOR = Color.white
+const FRAME_SHADOW_SELECTED_COLOR = Color.WHITE
 const FRAME_BODER_WIDTH = 0.0
 const FRAME_SHADOW_SIZE = 8.0
 const FRAME_CONTENT_MARGIN = 0.0
@@ -64,7 +63,7 @@ const ROW_CONTENT_MARGIN_LEFT = 18.0
 const ROW_CONTENT_MARGIN_RIGHT = 18.0
 const ROW_SEPARATION = 1.0
 const DISCONNECTED_LABEL_COLOR = Color(1.0, 1.0, 1.0, 0.5)
-const CONNECTED_LABEL_COLOR = Color.white
+const CONNECTED_LABEL_COLOR = Color.WHITE
 
 # Used to get Godot Icons
 var _godot_base_control: Control
@@ -72,8 +71,8 @@ var _anima_visual_node: Node
 
 const _is_debug_enabled := false
 
-const MAPPED_ICONS := {
-	TYPE_REAL: 'float',
+var MAPPED_ICONS := {
+	TYPE_FLOAT: 'float',
 	TYPE_INT: 'int',
 	TYPE_VECTOR2: 'Vector2',
 	TYPE_VECTOR3: 'Vector3',
@@ -104,7 +103,7 @@ func create_row_for_node(index: int, input_label_text: String, input_tooltip: St
 	return row
 
 func customise_node_style(node: GraphNode, title_node: PanelContainer, node_type: int) -> void:
-	var node_color = NODE_TYPE_COLOR[node_type] if NODE_TYPE_COLOR.has(node_type) else Color.black
+	var node_color = NODE_TYPE_COLOR[node_type] if NODE_TYPE_COLOR.has(node_type) else Color.BLACK
 	var title_color = node_color
 
 	apply_style_to_graph_node(node, node_color)
@@ -188,7 +187,7 @@ func generate_title_style(color: Color):
 	style.set_corner_radius(CORNER_TOP_LEFT, TITLE_BORDER_RADIUS * scale)
 	style.set_corner_radius(CORNER_TOP_RIGHT, TITLE_BORDER_RADIUS * scale)
 
-	style.set_border_width(MARGIN_BOTTOM, TITLE_BORDER_WIDTH)
+	style.set_border_width(TITLE_MARGIN_BOTTOM, TITLE_BORDER_WIDTH)
 	style.border_color = TITLE_BORDER_BOTTOM
 
 	return style
@@ -207,7 +206,7 @@ func generate_row_slot_panel_style():
 	var scale: float = get_dpi_scale()
 	var style = StyleBoxFlat.new()
 
-	var color = Color.transparent
+	var color = Color.TRANSPARENT
 	style.border_color = color
 	style.set_bg_color(color)
 

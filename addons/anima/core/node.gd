@@ -1,5 +1,3 @@
-tool
-
 class_name AnimaNode
 extends Node
 
@@ -31,25 +29,25 @@ func _exit_tree():
 	if _anima_tween == null or _anima_tween.is_queued_for_deletion():
 		return
 
-	_anima_tween.stop_all()
-	_anima_backwards_tween.stop_all()
-
-	_anima_tween.queue_free()
-	_anima_backwards_tween.queue_free()
+	_anima_tween.stop()
+	_anima_backwards_tween.stop()
 
 func _ready():
-	if not _anima_tween.is_connected("animation_completed", self, "_on_all_tween_completed"):
+	if not _anima_tween.is_connected("animation_completed", _on_all_tween_completed):
 		_init_node(self)
 
 func _init_node(node: Node):
-	_anima_tween.connect("animation_completed", self, '_on_all_tween_completed')
-	_anima_backwards_tween.connect("animation_completed", self, '_on_all_tween_completed')
+	_anima_tween.connect("animation_completed", _on_all_tween_completed)
+	_anima_backwards_tween.connect("animation_completed", _on_all_tween_completed)
 
-	add_child(_anima_tween)
-	add_child(_anima_backwards_tween)
+#	add_child(_anima_tween)
+#	add_child(_anima_backwards_tween)
 
 	if node != self:
 		node.add_child(self)
+
+	_anima_tween.init(get_tree().create_tween())
+	_anima_backwards_tween.init(get_tree().create_tween())
 
 func then(data) -> float:
 	if not data is Dictionary:
@@ -186,7 +184,7 @@ func set_single_shot(single_shot: bool) -> void:
 	_is_single_shot = single_shot
 
 	if _is_single_shot:
-		_anima_tween.set_repeat(false)
+		_anima_tween.set_loop(0)
 
 func set_visibility_strategy(strategy: int, always_apply_on_play := true) -> void:
 	_anima_tween.set_visibility_strategy(strategy)
@@ -224,7 +222,7 @@ func play_backwards_with_delay(delay: float) -> void:
 func play_backwards_with_speed(speed: float) -> void:
 	_play(AnimaTween.PLAY_MODE.BACKWARDS, 0.0, speed)
 
-func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
+func _play(mode: int, delay := 0.0, speed := 1.0) -> void:
 	_loop_times = 1
 	_play_mode = mode
 	_current_play_mode = mode
@@ -234,7 +232,7 @@ func _play(mode: int, delay: float = 0, speed := 1.0) -> void:
 		set_visibility_strategy(_anima_tween._visibility_strategy)
 
 	var wait_time = max(Anima.MINIMUM_DURATION, delay)
-	yield(get_tree().create_timer(wait_time), "timeout")
+	await get_tree().create_timer(wait_time)
 
 	_do_play()
 	_maybe_play()
@@ -295,7 +293,7 @@ func _do_loop(times: int, mode: int, delay: float = Anima.MINIMUM_DURATION, spee
 	_play_speed = speed
 
 	var wait_time = max(Anima.MINIMUM_DURATION, delay)
-	yield(get_tree().create_timer(wait_time), "timeout")
+	await get_tree().create_timer(wait_time)
 
 	_do_play()
 	_maybe_play()
@@ -344,7 +342,7 @@ func set_default_duration(duration: float) -> void:
 
 func _setup_animation(data: Dictionary) -> float:
 	if not data.has('duration'):
-		 data.duration = _default_duration
+		data.duration = _default_duration
 
 	if not data.has('property') and not data.has("animation"):
 		printerr('Please specify the property to animate or the animation to use!', data)
@@ -364,7 +362,7 @@ func _setup_animation(data: Dictionary) -> float:
 
 		return _setup_grid_animation(data)
 	elif not data.has('node'):
-		 data.node = self.get_parent()
+		data.node = self.get_parent()
 
 	return _setup_node_animation(data)
 

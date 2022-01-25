@@ -126,12 +126,12 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 		"rotation:z", "rotate:z":
 			return get_rotation(node).z
 		"opacity":
-			if node is MeshInstance:
+			if node is MeshInstance3D:
 				var material = node.get_surface_material(0)
 
 				if material == null:
 					return 0.0
-				elif material is SpatialMaterial:
+				elif material is Material:
 					return material.albedo_color.a
 				else:
 					return material.get_shader_param("opacity")
@@ -168,7 +168,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
-		if node is MeshInstance:
+		if node is MeshInstance3D:
 			material = node.get_surface_material(0)
 		else:
 			material = node.material
@@ -253,12 +253,12 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				key = "origin"
 			}
 		"opacity":
-			if node is MeshInstance:
+			if node is MeshInstance3D:
 				var material = node.get_surface_material(0)
 
 				if material == null:
 					return {}
-				elif material is SpatialMaterial:
+				elif material is Material:
 					return {
 						property = material,
 						key = "albedo_color",
@@ -266,7 +266,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 					}
 
 				return {
-					callback = funcref(material, 'set_shader_param'),
+					callback = Callable(material, 'set_shader_param'),
 					param = "opacity"
 				}
 			return {
@@ -352,13 +352,13 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 
 	if p[0] == 'shader_param':
 		var material: ShaderMaterial
-		if node is MeshInstance:
+		if node is MeshInstance3D:
 			material = node.get_surface_material(0)
 		else:
 			material = node.material
 
 		return {
-			callback = funcref(material, 'set_shader_param'),
+			callback = Callable(material, 'set_shader_param'),
 			param = p[1]
 		}
 

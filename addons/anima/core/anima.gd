@@ -1,4 +1,3 @@
-tool
 extends Node
 
 const BASE_PATH := 'res://addons/anima/animations/'
@@ -54,18 +53,18 @@ enum VALUES_IN {
 }
 
 const Align = {
-	LEFT = HALIGN_LEFT,
-	CENTER = HALIGN_CENTER,
-	RIGHT = HALIGN_RIGHT,
+	LEFT = HORIZONTAL_ALIGNMENT_LEFT,
+	CENTER = HORIZONTAL_ALIGNMENT_CENTER,
+	RIGHT = HORIZONTAL_ALIGNMENT_RIGHT,
 }
 
 const VAlign = {
-	TOP = VALIGN_TOP,
-	CENTER = VALIGN_CENTER,
-	BOTTOM = VALIGN_BOTTOM,
+	TOP = VERTICAL_ALIGNMENT_TOP,
+	CENTER = VERTICAL_ALIGNMENT_CENTER,
+	BOTTOM = VERTICAL_ALIGNMENT_BOTTOM,
 }
 
-const EASING = AnimaEasing.EASING
+#const EASING = AnimaEasing.EASING
 
 const DEFAULT_DURATION := 0.7
 const DEFAULT_ITEMS_DELAY := 0.05
@@ -79,7 +78,9 @@ func begin(node: Node, name: String = 'anima', single_shot := false):
 	var anima_node: Node
 
 	for child in node.get_children():
-		if child.name.find(node_name) >= 0:
+		var child_name: String = child.name
+
+		if child_name.find(node_name) >= 0:
 			anima_node = child
 			anima_node.clear()
 			anima_node.stop()

@@ -1,51 +1,50 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=4 format=3 uid="uid://rrolk6xrf42u"]
 
-[ext_resource path="res://tests/Test.gd" type="Script" id=1]
-[ext_resource path="res://addons/anima/core/visual_node.gd" type="Script" id=2]
-[ext_resource path="res://addons/anima/core/node.gd" type="Script" id=3]
+[ext_resource type="Script" path="res://tests/Test.gd" id="1"]
+[ext_resource type="Script" path="res://addons/anima/core/visual_node.gd" id="2"]
+[ext_resource type="Script" path="res://addons/anima/core/node.gd" id="3"]
 
 [node name="Control" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-script = ExtResource( 1 )
+script = ExtResource( "1" )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="RichTextLabel" type="RichTextLabel" parent="."]
-margin_right = 703.0
-margin_bottom = 366.0
 text = "Testing typewriter"
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Button" type="Button" parent="."]
-margin_left = 316.0
-margin_top = 221.0
-margin_right = 706.002
-margin_bottom = 358.0
-rect_pivot_offset = Vector2( 195.001, 68.5 )
+offset_left = 340.0
+offset_top = 216.0
+offset_right = 830.0
+offset_bottom = 311.0
+rect_pivot_offset = Vector2(195.001, 68.5)
+text = "Godot 4.0"
 __meta__ = {
 "_edit_use_anchors_": false,
 "_visibility_strategy_reverted": true
 }
 
 [node name="AnimaVisualNode" type="Node" parent="."]
-script = ExtResource( 2 )
+script = ExtResource( "2" )
 __anima_visual_editor_data = {
-"animations": [ {
+"animations": [{
 "name": "default",
 "visibility_strategy": 0
-} ],
-"connection_list": [ {
+}],
+"connection_list": [{
 "from": "AnimaNode26175",
 "from_port": 0,
 "to": "Animation41344",
 "to_port": 0
-} ],
+}],
 "data_by_animation": {
-0: [ {
+0: [{
 "data": {
 "animation_data": {
 "property": {
@@ -53,7 +52,7 @@ __anima_visual_editor_data = {
 "easing": 27,
 "from": 0.0,
 "name": "position:x",
-"pivot": [ 0, -1 ],
+"pivot": [0, -1],
 "relative": false,
 "type": 3
 },
@@ -64,16 +63,15 @@ __anima_visual_editor_data = {
 },
 "node_path": "Button",
 "start_time": 0.0
-} ]
+}]
 },
-"events_slots": [  ],
-"nodes": [ {
-"data": {
-},
+"events_slots": [],
+"nodes": [{
+"data": {},
 "id": "AnimaNode",
 "name": "AnimaNode26175",
 "node_path": null,
-"position": Vector2( 1540, 20 ),
+"position": Vector2(1540, 20),
 "title": "AnimaNode"
 }, {
 "data": {
@@ -83,7 +81,7 @@ __anima_visual_editor_data = {
 "easing": 27,
 "from": 0.0,
 "name": "position:x",
-"pivot": [ 0, -1 ],
+"pivot": [0, -1],
 "relative": false,
 "type": 3
 },
@@ -95,36 +93,41 @@ __anima_visual_editor_data = {
 "id": "Animation",
 "name": "Animation41344",
 "node_path": NodePath("Button"),
-"position": Vector2( 1953, -180 ),
+"position": Vector2(1953, -180),
 "title": "./Button"
-} ],
-"scroll_offset": Vector2( 1607, 48 ),
+}],
+"scroll_offset": Vector2(1607, 48),
 "zoom": 1.0
 }
 
-[node name="Control" type="Control" parent="."]
-margin_left = 183.0
-margin_top = 374.0
-margin_right = 223.0
-margin_bottom = 414.0
+[node name="Control" type="HBoxContainer" parent="."]
+anchor_right = 0.179
+anchor_bottom = 0.275
+offset_left = 37.0
+offset_top = 492.0
+offset_right = 814.704
+offset_bottom = 413.0
+size_flags_horizontal = 3
 
 [node name="Button2" type="Button" parent="Control"]
-anchor_right = 2.869
-anchor_bottom = 1.828
-margin_right = -102.76
-margin_bottom = -53.12
+offset_right = 317.0
+offset_bottom = 86.0
+size_flags_horizontal = 3
+text = "Button 1"
 
 [node name="Button3" type="Button" parent="Control"]
-margin_left = -1.0
-margin_top = 54.0
-margin_right = 11.0
-margin_bottom = 74.0
+offset_left = 321.0
+offset_right = 639.0
+offset_bottom = 86.0
+size_flags_horizontal = 3
+text = "Button 2"
 
 [node name="Button4" type="Button" parent="Control"]
-margin_left = -4.0
-margin_top = 126.0
-margin_right = 9.0
-margin_bottom = 146.0
+offset_left = 643.0
+offset_right = 961.0
+offset_bottom = 86.0
+size_flags_horizontal = 3
+text = "Button 3"
 
 [node name="AnimaNode" type="Node" parent="."]
-script = ExtResource( 3 )
+script = ExtResource( "3" )

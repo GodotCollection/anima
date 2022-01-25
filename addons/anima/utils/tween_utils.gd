@@ -29,7 +29,7 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 		to = current_value
 
 	var pivot = animation_data.pivot if animation_data.has("pivot") else Anima.PIVOT.CENTER 
-	if not node is Spatial:
+	if not node is Node3D:
 		AnimaNodesProperties.set_2D_pivot(animation_data.node, pivot)
 
 	var s = -1.0 if is_backwards_animation and relative else 1.0
@@ -55,6 +55,8 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 	if (not value is String and not value is Array) or (value is String and value.find(':') < 0):
 		return value
 
+	return value
+
 	var values_to_check: Array
 
 	if value is String:
@@ -79,7 +81,7 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 		var variables := []
 		var values := []
 
-		results.invert()
+		results.reverse()
 
 		for index in results.size():
 			var rm: RegExMatch = results[index]
@@ -92,7 +94,7 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 			else:
 				source_node = root.get_node(source)
 
-			var property: String = PoolStringArray(info).join(":")
+			var property: String = ":".join(info)
 
 			var property_value = AnimaNodesProperties.get_property_value(source_node, animation_data, property)
 

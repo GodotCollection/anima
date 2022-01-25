@@ -1,0 +1,5 @@
+res://addons/anima/core/node.gd
+res://addons/anima/core/tween.gd
+res://addons/anima/utils/tween_utils.gd
+res://tests/Test.gd
+res://tests/Test.tscn

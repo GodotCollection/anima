@@ -1,4 +1,3 @@
-tool
 class_name AnimaArc
 extends "res://addons/anima/shapes/Base.gd"
 

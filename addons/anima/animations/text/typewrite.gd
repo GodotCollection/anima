@@ -5,7 +5,7 @@ var KEYFRAMES := {
 	100: {
 		visible_characters = ":text:length",
 	},
-	initial_values = {
+	"initial_values": {
 		visible_characters = 0,
 	}
 }

@@ -1,10 +1,9 @@
-tool
 class_name AnimaVisualNode
 extends Node
 
 signal animation_completed
 
-export (Dictionary) var __anima_visual_editor_data = {}
+@export var __anima_visual_editor_data := {}
 
 var _initial_values := {}
 var _active_anima_node: AnimaNode
@@ -100,7 +99,7 @@ func _play_animation_from_data(animations_data: Dictionary, speed: float, reset_
 	_active_anima_node = anima
 	anima.play_with_speed(speed)
 
-	yield(anima, "animation_completed")
+	await anima
 
 	if reset_initial_values:
 		_reset_initial_values()
@@ -123,7 +122,7 @@ func preview_animation(node: Node, duration: float, delay: float, animation_data
 	anima.then(anima_data)
 
 	anima.play()
-	yield(anima, "animation_completed")
+	await anima
 
 	_reset_initial_values()
 
@@ -179,7 +178,7 @@ func _create_animation_data(node: Node, duration: float, delay: float, animation
 func _reset_initial_values() -> void:
 	_active_anima_node = null
 
-	yield(get_tree().create_timer(1.0), "timeout")
+	await get_tree().create_timer(1.0)
 
 	# reset node initial values
 	if _initial_values.size() == 0:

@@ -42,7 +42,7 @@ enum EASING {
 	EASE_IN_OUT_BOUNCE,
 }
 
-const _easing_mapping = {
+var _easing_mapping := {
 	EASING.LINEAR: null,
 	EASING.EASE: [0.25, 0.1, 0.25, 1],
 	EASING.EASE_IN_OUT: [0.42, 0, 0.58, 1],
@@ -84,12 +84,14 @@ const _ELASTIC_C4: float = (2.0 * PI) / 3.0
 const _ELASTIC_C5: float = (2.0 * PI) / 4.5
 
 static func get_easing_points(easing_name):
-	if _easing_mapping.has(easing_name):
-		return _easing_mapping[easing_name]
-
-	printerr('Easing not found: ' + str(easing_name))
-
-	return _easing_mapping[EASING.LINEAR]
+	return [0.25, 0.1, 0.25, 1]
+#
+#	if _easing_mapping.has(easing_name):
+#		return _easing_mapping[easing_name]
+#
+#	printerr('Easing not found: ' + str(easing_name))
+#
+#	return _easing_mapping[EASING.LINEAR]
 
 static func ease_in_elastic(elapsed: float) -> float:
 	if elapsed == 0:

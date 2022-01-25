@@ -28,71 +28,71 @@ func anima_items_delay(delay: float) -> AnimaDeclarationGrid:
 
 
 func anima_from(from) -> AnimaDeclarationGrid:
-	.anima_from(from)
+	super.anima_from(from)
 
 	return self
 
 func anima_to(to) -> AnimaDeclarationGrid:
-	.anima_to(to)
+	super.anima_to(to)
 
 	return self
 
 func anima_duration(duration: float) -> AnimaDeclarationGrid:
-	.anima_duration(duration)
+	super.anima_duration(duration)
 
 	return self
 
 func anima_delay(delay: float) -> AnimaDeclarationGrid:
-	.anima_delay(delay)
+	super.anima_delay(delay)
 
 	return self
 
 func anima_animation(animation) -> AnimaDeclarationGrid:
-	.anima_animation(animation)
+	super.anima_animation(animation)
 
 	return self
 
 func anima_property(property_name) -> AnimaDeclarationGrid:
-	.anima_property(property_name)
+	super.anima_property(property_name)
 
 	return self
 
 func anima_relative(relative: bool) -> AnimaDeclarationGrid:
-	.anima_relative(relative)
+	super.anima_relative(relative)
 
 	return self
 
 func anima_easing(easing) -> AnimaDeclarationGrid:
-	.anima_easing(easing)
+	super.anima_easing(easing)
 
 	return self
 
 func anima_pivot(pivot: int) -> AnimaDeclarationGrid:
-	.anima_pivot(pivot)
+	super.anima_pivot(pivot)
 
 	return self
 
 func anima_visibility_strategy(strategy: int) -> AnimaDeclarationGrid:
-	.anima_visibility_strategy(strategy)
+	super.anima_visibility_strategy(strategy)
 
 	return self
 
 func anima_initial_value(initial_value) -> AnimaDeclarationGrid:
-	.anima_initial_value(initial_value)
+	super.anima_initial_value(initial_value)
 
 	return self
 
 func anima_initial_values(initial_values: Dictionary) -> AnimaDeclarationGrid:
-	.anima_initial_values(initial_values)
+	super.anima_initial_values(initial_values)
 
 	return self
 
-func anima_on_started(on_started: FuncRef, on_started_value, on_backwards_completed_value) -> AnimaDeclarationGrid:
-	.anima_on_started(on_started, on_started_value, on_backwards_completed_value)
+func anima_on_started(on_started: Callable, on_started_value, on_backwards_completed_value) -> AnimaDeclarationGrid:
+	super.anima_on_started(on_started, on_started_value, on_backwards_completed_value)
 
 	return self
 
-func anima_on_completed(on_completed: FuncRef) -> AnimaDeclarationGrid:
-	.anima_on_completed(on_completed)
+func anima_on_completed(on_completed: Callable) -> AnimaDeclarationGrid:
+	super.anima_on_completed(on_completed)
 
 	return self
