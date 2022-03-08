@@ -1,133 +1,23 @@
-[gd_scene load_steps=4 format=3 uid="uid://rrolk6xrf42u"]
+[gd_scene load_steps=2 format=3 uid="uid://cladcsfwntfsi"]
 
 [ext_resource type="Script" path="res://tests/Test.gd" id="1"]
-[ext_resource type="Script" path="res://addons/anima/core/visual_node.gd" id="2"]
-[ext_resource type="Script" path="res://addons/anima/core/node.gd" id="3"]
 
-[node name="Control" type="Control"]
+[node name="Node2D" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_right = -1024.0
+offset_bottom = -600.0
 script = ExtResource( "1" )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="RichTextLabel" type="RichTextLabel" parent="."]
-text = "Testing typewriter"
+[node name="Button" type="Button" parent="."]
+offset_left = 458.0
+offset_top = 157.0
+offset_right = 617.0
+offset_bottom = 203.0
+text = "Button me"
 __meta__ = {
 "_edit_use_anchors_": false
 }
-
-[node name="Button" type="Button" parent="."]
-offset_left = 340.0
-offset_top = 216.0
-offset_right = 830.0
-offset_bottom = 311.0
-rect_pivot_offset = Vector2(195.001, 68.5)
-text = "Godot 4.0"
-__meta__ = {
-"_edit_use_anchors_": false,
-"_visibility_strategy_reverted": true
-}
-
-[node name="AnimaVisualNode" type="Node" parent="."]
-script = ExtResource( "2" )
-__anima_visual_editor_data = {
-"animations": [{
-"name": "default",
-"visibility_strategy": 0
-}],
-"connection_list": [{
-"from": "AnimaNode26175",
-"from_port": 0,
-"to": "Animation41344",
-"to_port": 0
-}],
-"data_by_animation": {
-0: [{
-"data": {
-"animation_data": {
-"property": {
-"animate_as": 0,
-"easing": 27,
-"from": 0.0,
-"name": "position:x",
-"pivot": [0, -1],
-"relative": false,
-"type": 3
-},
-"type": 1
-},
-"delay": 0.0,
-"duration": 0.3
-},
-"node_path": "Button",
-"start_time": 0.0
-}]
-},
-"events_slots": [],
-"nodes": [{
-"data": {},
-"id": "AnimaNode",
-"name": "AnimaNode26175",
-"node_path": null,
-"position": Vector2(1540, 20),
-"title": "AnimaNode"
-}, {
-"data": {
-"animation_data": {
-"property": {
-"animate_as": 0,
-"easing": 27,
-"from": 0.0,
-"name": "position:x",
-"pivot": [0, -1],
-"relative": false,
-"type": 3
-},
-"type": 1
-},
-"delay": 0.0,
-"duration": 0.3
-},
-"id": "Animation",
-"name": "Animation41344",
-"node_path": NodePath("Button"),
-"position": Vector2(1953, -180),
-"title": "./Button"
-}],
-"scroll_offset": Vector2(1607, 48),
-"zoom": 1.0
-}
-
-[node name="Control" type="HBoxContainer" parent="."]
-anchor_right = 0.179
-anchor_bottom = 0.275
-offset_left = 37.0
-offset_top = 492.0
-offset_right = 814.704
-offset_bottom = 413.0
-size_flags_horizontal = 3
-
-[node name="Button2" type="Button" parent="Control"]
-offset_right = 317.0
-offset_bottom = 86.0
-size_flags_horizontal = 3
-text = "Button 1"
-
-[node name="Button3" type="Button" parent="Control"]
-offset_left = 321.0
-offset_right = 639.0
-offset_bottom = 86.0
-size_flags_horizontal = 3
-text = "Button 2"
-
-[node name="Button4" type="Button" parent="Control"]
-offset_left = 643.0
-offset_right = 961.0
-offset_bottom = 86.0
-size_flags_horizontal = 3
-text = "Button 3"
-
-[node name="AnimaNode" type="Node" parent="."]
-script = ExtResource( "3" )

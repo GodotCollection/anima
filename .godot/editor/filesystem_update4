@@ -1,5 +1,7 @@
-res://addons/anima/core/node.gd
-res://addons/anima/core/tween.gd
-res://addons/anima/utils/tween_utils.gd
+res://addons/anima/animations/fading_entrances/fade_in.gd
+res://addons/anima/core/anima_node.gd
+res://addons/anima/plugin.gd
+res://addons/anima/ui/anima_ui.gd
+res://addons/anima/utils/anima_animations.gd
 res://tests/Test.gd
 res://tests/Test.tscn

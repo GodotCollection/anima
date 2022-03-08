@@ -20,6 +20,7 @@ static func get_position(node: Node) -> Vector2:
 
 static func get_size(node: Node) -> Vector2:
 	if node is Control:
+		node.get_size()
 		return node.get_size()
 	elif node is Node2D:
 		return node.texture.get_size() * node.scale
@@ -97,8 +98,6 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 	if property is Object:
 		return property[animation_data.key]
 
-	property = property.to_lower()
-
 	match property:
 		"x", "position:x":
 			var position = get_position(node)
@@ -143,9 +142,9 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 			return node.get_global_transform().x.y
 		"size":
 			return get_size(node)
-		"size:x":
+		"size:x", "width":
 			return get_size(node).x
-		"size:y":
+		"size:y", "height":
 			return get_size(node).y
 
 	var p = property.split(':')
@@ -159,7 +158,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 
 	if node.get(property_name):
 		node_property_name = property_name
-	elif node.get(rect_property_name):
+	elif node.get(rect_property_name) != null:
 		node_property_name = rect_property_name
 	elif property_name in node:
 		node_property_name = property_name
@@ -198,7 +197,7 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 
 			return prop[key]
 
-		return node[node_property_name]
+		return node.get(node_property_name)
 
 	if property.find('__') == 0:
 		return 0
@@ -206,8 +205,6 @@ static func get_property_value(node: Node, animation_data: Dictionary, property 
 	return property_name
 
 static func map_property_to_godot_property(node: Node, property: String) -> Dictionary:
-	property = property.to_lower()
-
 	match property:
 		"x", "position:x":
 			if node is Control:
@@ -232,6 +229,28 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 				property = "global_transform",
 				key = "origin",
 				subkey = "y"
+			}
+		"width":
+			if node is Control:
+				return {
+					property = "rect_size",
+					key = "x",
+				}
+
+			return {
+				property = "size",
+				key = "x",
+			}
+		"height":
+			if node is Control:
+				return {
+					property = "rect_size",
+					key = "y",
+				}
+
+			return {
+				property = "size",
+				key = "y",
 			}
 		"z", "position:z":
 			if node is Control:
@@ -341,13 +360,9 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 	var key = p[1] if p.size() > 1 else null
 	var subkey = p[2] if p.size() > 2 else null
 
-	if node.get(property_name):
+	if node.get(property_name) or property_name in node:
 		node_property_name = property_name
-	elif node.get(rect_property_name):
-		node_property_name = rect_property_name
-	elif property_name in node:
-		node_property_name = property_name
-	elif rect_property_name in node:
+	elif node.get(rect_property_name) or rect_property_name in node:
 		node_property_name = rect_property_name
 
 	if p[0] == 'shader_param':
@@ -363,7 +378,7 @@ static func map_property_to_godot_property(node: Node, property: String) -> Dict
 		}
 
 	if node_property_name:
-		var is_rect2 = node[node_property_name] is Rect2
+		var is_rect2 = (node_property_name in node and node[node_property_name] is Rect2)
 		if is_rect2 and p.size() > 1:
 			var k: String = p[1]
 

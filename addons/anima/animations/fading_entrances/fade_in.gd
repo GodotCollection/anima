@@ -1,8 +1,8 @@
 var KEYFRAMES := {
-	0: {
+	from = {
 		opacity = 0,
 	},
-	100: {
+	to = {
 		opacity = 1,
 	},
 	initial_values = {

@@ -37,14 +37,14 @@ static func calculate_from_and_to(animation_data: Dictionary, is_backwards_anima
 	if from is Vector2 and to is Vector3:
 		to = Vector2(to.x, to.y)
 
+	if animation_data.has("__debug"):
+		printt("Name", animation_data.node.name, "from", from, "to", to, "current_value", current_value, animation_data)
+
 	if typeof(to) == TYPE_RECT2:
 		return {
 			from = from,
 			diff = { position = to.position - from.position, size = to.size - from.size }
 		}
-
-	if animation_data.has("__debug"):
-		printt(animation_data.node.name, from, to, current_value, animation_data)
 
 	return {
 		from = from,
@@ -89,7 +89,7 @@ static func maybe_calculate_value(value, animation_data: Dictionary):
 			var source = info.pop_front()
 			var source_node: Node
 
-			if source == '':
+			if source == '' or source == '.':
 				source_node = animation_data.node
 			else:
 				source_node = root.get_node(source)
@@ -163,6 +163,12 @@ static func flatten_keyframes_data(data: Dictionary) -> Dictionary:
 			key = [key]
 
 		for percentage in key:
+			if percentage is String:
+				if percentage == "from":
+					percentage = 0
+				elif percentage == "to":
+					percentage = 100
+
 			if not result.has(percentage):
 				result[percentage] = {}
 

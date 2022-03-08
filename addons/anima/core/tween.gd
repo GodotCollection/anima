@@ -1,3 +1,4 @@
+@tool
 class_name AnimaTween
 extends Node
 
@@ -70,7 +71,9 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		animation_data.initial_values = {}
 		animation_data.initial_values[animation_data.property] = animation_data.initial_value
 
-	if animation_data.has("initial_values"):
+	var ignore_initial_values = animation_data.has("_ignore_initial_values") and animation_data._ignore_initial_values
+
+	if animation_data.has("initial_values") and not is_backwards_animation and not ignore_initial_values:
 		if not animation_data.has("to"):
 			printerr("When using '_initial_value' the 'to' cannot be empty!")
 		else:
@@ -79,7 +82,7 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 	var easing_points
 
 #	if animation_data.has('easing') and not animation_data.easing == null:
-#		if animation_data.easing is FuncRef or animation_data.easing is Array:
+#		if animation_data.easing is Callable or animation_data.easing is Array:
 #			easing_points = animation_data.easing
 #		else:
 #			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
@@ -107,8 +110,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		use_method = 'animate_with_easing'
 	elif easing_points is String:
 		use_method = 'animate_with_anima_easing'
-#	elif easing_points is FuncRef:
-#		use_method = 'animate_with_easing_funcref'
+#	elif easing_points is Callable:
+#		use_method = 'animate_with_easing_callable'
 
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
@@ -123,6 +126,8 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 		1.0,
 		duration
 	)
+	
+	add_child(object)
 
 func _apply_initial_values(animation_data: Dictionary) -> void:
 	var node: Node = animation_data.node
@@ -193,6 +198,10 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 	var is_first_frame = true
 	var relative_properties: Array = ["x", "y", "z", "position", "position:x", "position:z", "position:y"]
 	var pivot = full_keyframes_data.pivot if full_keyframes_data.has("pivot") else null
+	var easing = full_keyframes_data.easing if full_keyframes_data.has("easing") else null
+
+	if animation_data.has("_ignore_relative") and animation_data._ignore_relative:
+		relative_properties = []
 
 	if full_keyframes_data.has("relative"):
 		relative_properties = full_keyframes_data.relative
@@ -212,6 +221,9 @@ func add_frames(animation_data: Dictionary, full_keyframes_data: Dictionary) -> 
 
 	if keyframes_data.has("initial_values"):
 		animation_data.initial_values = keyframes_data.initial_values
+
+	if easing:
+		animation_data.easing = easing
 
 	keyframes_data.erase("initial_values")
 
@@ -266,9 +278,22 @@ func _sort_frame_index(a, b) -> bool:
 func _calculate_frame_data(wait_time: float, animation_data: Dictionary, relative_properties: Array, current_frame_key: float, frame_data: Dictionary, previous_frame_key: float, previous_frame: Dictionary) -> float:
 	var percentage = (current_frame_key - previous_frame_key) / 100.0
 	var duration: float = animation_data.duration if animation_data.has('duration') else 0.0
-	var easing = previous_frame.easing if previous_frame.has("easing") else null
-	var pivot = previous_frame.pivot if previous_frame.has("pivot") else null
+	var easing = null
+	var pivot = null
 	var frame_duration = max(Anima.MINIMUM_DURATION, duration * percentage)
+
+	if animation_data.has("easing"):
+		easing = animation_data.easing
+
+	if previous_frame.has("easing"):
+		easing = previous_frame.easing
+	elif frame_data.has("easing"):
+		easing = frame_data.easing
+
+	if previous_frame.has("pivot"):
+		easing = previous_frame.easing
+	elif frame_data.has("pivot"):
+		easing = frame_data.easing
 
 	previous_frame.erase("easing")
 	previous_frame.erase("pivot")
@@ -372,6 +397,9 @@ func clear_animations() -> void:
 #	reset_all()
 	_tween.stop()
 
+	for child in get_children():
+		child.queue_free()
+
 	_callbacks = {}
 	_animation_data.clear()
 
@@ -409,12 +437,19 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 			continue
 
 		var animation_data = animation.duplicate(true)
+
 		var duration: float = float(animation_data.duration) if animation_data.has('duration') else default_duration
 		var wait_time: float = animation_data._wait_time
 		var node = animation_data.node
 		var new_wait_time: float = length - duration - wait_time
 		var property = animation_data.property
 		var is_relative = animation_data.has("relative") and animation_data.relative
+
+		if animation_data.has("initial_value"):
+			animation_data.erase("initial_value")
+			
+		if animation_data.has("initial_values"):
+			animation_data.erase("initial_values")
 
 		if not is_relative:
 			var temp = animation_data.to
@@ -440,6 +475,9 @@ func _flip_animations(data: Array, animation_length: float, default_duration: fl
 
 			if erase_on_completed:
 				animation_data.erase('on_completed')
+
+		animation_data.erase("initial_values")
+		animation_data.erase("initial_value")
 
 		new_data.push_back(animation_data)
 
@@ -525,14 +563,14 @@ class AnimatedItem extends Node:
 	var _loop_strategy: int = Anima.LOOP.USE_EXISTING_RELATIVE_DATA
 	var _is_backwards_animation: bool = false
 	var _root_node: Node
-#	var _animation_callback: FuncRef
+#	var _animation_callback: Callable
 	var _visibility_strategy: int
 	var _property_data: Dictionary
 
 	func on_started() -> void:
 		var visibility_strategy = _visibility_strategy
 
-		if _node.has_meta("_visibility_strategy_reverted"):
+		if _node.has_meta("_visibility_strategy_reverted") or not _animation_data.has('on_started'):
 			return
 
 		_node.set_meta("_visibility_strategy_reverted", true)
@@ -564,7 +602,8 @@ class AnimatedItem extends Node:
 		if should_restore_visibility:
 			_node.show()
 
-		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and _animation_data._is_first_frame and _animation_data.has('on_started')
+		var should_trigger_on_started: bool = _animation_data.has('_is_first_frame') and _animation_data._is_first_frame
+
 		if should_trigger_on_started:
 			_execute_callback(_animation_data.on_started)
 
@@ -589,9 +628,24 @@ class AnimatedItem extends Node:
 		_node = data.node
 		_node.remove_meta("_visibility_strategy_reverted")
 
+		if _animation_data.has("__debug"):
+			print(data)
+
+			print("Using:")
+			printt("", "AnimatedPropertyItem:", self is AnimatedPropertyItem)
+			printt("", "AnimatedPropertyWithKeyItem:", self is AnimatedPropertyWithKeyItem)
+			printt("", "AnimatedPropertyWithSubKeyItem:", self is AnimatedPropertyWithSubKeyItem)
+			printt("", "AnimateObjectWithKey:", self is AnimateObjectWithKey)
+			printt("", "AnimateObjectWithSubKey:", self is AnimateObjectWithSubKey)
+			printt("", "AnimateRect2:", self is AnimateRect2)
+
 	func animate(elapsed: float) -> void:
 		if _property_data.size() == 0:
 			_property_data = AnimaTweenUtils.calculate_from_and_to(_animation_data, _is_backwards_animation)
+
+			if _animation_data.has("__debug"):
+				print("animate")
+				printt("", _property_data)
 
 		var from = _property_data.from
 		var diff = _property_data.diff
@@ -621,7 +675,7 @@ class AnimatedItem extends Node:
 
 		animate(easing_elapsed)
 
-	func animate_with_easing_funcref(elapsed: float):
+	func animate_with_easing_callable(elapsed: float):
 		var easing_callback = _animation_data._easing_points
 		var easing_elapsed = easing_callback.call_func(elapsed)
 
@@ -659,7 +713,7 @@ class AnimatedItem extends Node:
 
 class AnimatedPropertyItem extends AnimatedItem:
 	func apply_value(value) -> void:
-		_node[_property] = value
+		_node.set(_property, value)
 
 class AnimatedPropertyWithKeyItem extends AnimatedItem:
 	func apply_value(value) -> void:
@@ -688,4 +742,4 @@ class AnimateRect2 extends AnimatedItem:
 		))
 
 	func apply_value(value: Rect2) -> void:
-		_node[_property] = value
+		_node.set(_property, value)

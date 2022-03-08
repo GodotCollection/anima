@@ -10,24 +10,34 @@ config_version=5
 
 _global_script_classes=[{
 "base": "RefCounted",
+"class": &"AnimaAnimationsUtils",
+"language": &"GDScript",
+"path": "res://addons/anima/utils/anima_animations.gd"
+}, {
+"base": "Object",
 "class": &"AnimaDeclarationBase",
 "language": &"GDScript",
-"path": "res://addons/anima/utils/anima_declaration_base.gd"
+"path": "res://addons/anima/core/declaration/anima_declaration_base.gd"
 }, {
 "base": "AnimaDeclarationBase",
+"class": &"AnimaDeclarationForAnimation",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_animation.gd"
+}, {
+"base": "AnimaDeclarationBase",
+"class": &"AnimaDeclarationForProperty",
+"language": &"GDScript",
+"path": "res://addons/anima/core/declaration/anima_declaration_for_property.gd"
+}, {
+"base": "AnimaDeclarationNode",
 "class": &"AnimaDeclarationGrid",
 "language": &"GDScript",
-"path": "res://addons/anima/utils/anima_declaration_grid.gd"
+"path": "res://addons/anima/core/declaration/anima_declaration_grid.gd"
 }, {
-"base": "AnimaDeclarationBase",
-"class": &"AnimaDeclarationGroup",
-"language": &"GDScript",
-"path": "res://addons/anima/utils/anima_declaration_group.gd"
-}, {
-"base": "AnimaDeclarationBase",
+"base": "RefCounted",
 "class": &"AnimaDeclarationNode",
 "language": &"GDScript",
-"path": "res://addons/anima/utils/anima_declaration_node.gd"
+"path": "res://addons/anima/core/declaration/anima_declaration_node.gd"
 }, {
 "base": "RefCounted",
 "class": &"AnimaEasing",
@@ -37,17 +47,17 @@ _global_script_classes=[{
 "base": "Node",
 "class": &"AnimaNode",
 "language": &"GDScript",
-"path": "res://addons/anima/core/node.gd"
+"path": "res://addons/anima/core/anima_node.gd"
 }, {
 "base": "RefCounted",
 "class": &"AnimaNodesProperties",
 "language": &"GDScript",
 "path": "res://addons/anima/utils/node_properties.gd"
 }, {
-"base": "Control",
-"class": &"AnimaShape",
+"base": "Object",
+"class": &"AnimaPropertyList",
 "language": &"GDScript",
-"path": "res://addons/anima/shapes/Base.gd"
+"path": "res://addons/anima/utils/anima_properties_list.gd"
 }, {
 "base": "RefCounted",
 "class": &"AnimaStrings",
@@ -63,25 +73,21 @@ _global_script_classes=[{
 "class": &"AnimaTweenUtils",
 "language": &"GDScript",
 "path": "res://addons/anima/utils/tween_utils.gd"
-}, {
-"base": "Node",
-"class": &"AnimaVisualNode",
-"language": &"GDScript",
-"path": "res://addons/anima/core/visual_node.gd"
 }]
 _global_script_class_icons={
+"AnimaAnimationsUtils": "",
 "AnimaDeclarationBase": "",
+"AnimaDeclarationForAnimation": "",
+"AnimaDeclarationForProperty": "",
 "AnimaDeclarationGrid": "",
-"AnimaDeclarationGroup": "",
 "AnimaDeclarationNode": "",
 "AnimaEasing": "",
 "AnimaNode": "",
 "AnimaNodesProperties": "",
-"AnimaShape": "",
+"AnimaPropertyList": "",
 "AnimaStrings": "",
 "AnimaTween": "",
-"AnimaTweenUtils": "",
-"AnimaVisualNode": ""
+"AnimaTweenUtils": ""
 }
 
 [application]
@@ -91,13 +97,16 @@ config/features=PackedStringArray("4.0")
 
 [autoload]
 
-AnimaUi="*res://addons/anima/ui/AnimaUI.gd"
-AnimaUI="*res://addons/anima/ui/AnimaUI.gd"
+AnimaUI="*res://addons/anima/ui/anima_ui.gd"
 Anima="*res://addons/anima/core/anima.gd"
 
 [editor_plugins]
 
-enabled=PackedStringArray()
+enabled=PackedStringArray("res://addons/anima/plugin.cfg")
+
+[gui]
+
+theme/use_hidpi=true
 
 [network]
 
