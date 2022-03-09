@@ -23,10 +23,11 @@ enum PLAY_MODE {
 
 func init(tween: Tween):
 	_tween = tween
+	_tween.pause()
 
 func _ready():
-	connect("tween_started", _on_tween_started)
-	connect("tween_completed", _on_tween_completed)
+	_tween.connect("tween_started", _on_tween_started)
+	_tween.connect("tween_completed", _on_tween_completed)
 
 	#
 	# By default Godot runs interpolate_property animation runs only once
@@ -41,18 +42,16 @@ func _ready():
 	# So, once all the animations are completed (_tween_completed == _animation_data.size())
 	# we pause the tween, and next time we call play again we resume it and it works...
 	# There is no need to recreating anything on each "loop"
-	_tween.set_loops()
+	set_loops(0)
 
 func play(play_speed: float):
 	_tween.set_speed_scale(play_speed)
 
 	_tween_completed = 0
 
-	print("playing")
 	_tween.play()
-#	resume_all()
 
-func set_loop(loops: int) -> void:
+func set_loops(loops: int) -> void:
 	_tween.set_loops(loops)
 
 func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.NORMAL) -> void:
@@ -81,11 +80,11 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	var easing_points
 
-#	if animation_data.has('easing') and not animation_data.easing == null:
-#		if animation_data.easing is Callable or animation_data.easing is Array:
-#			easing_points = animation_data.easing
-#		else:
-#			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
+	if animation_data.has('easing') and not animation_data.easing == null:
+		if animation_data.easing is Callable or animation_data.easing is Array:
+			easing_points = animation_data.easing
+		else:
+			easing_points = AnimaEasing.get_easing_points(animation_data.easing)
 
 	animation_data._easing_points = easing_points
 	var property_data: Dictionary = {}
@@ -106,18 +105,22 @@ func add_animation_data(animation_data: Dictionary, play_mode: int = PLAY_MODE.N
 
 	var use_method: String = "animate_linear"
 
-	if easing_points is Array:
-		use_method = 'animate_with_easing'
-	elif easing_points is String:
-		use_method = 'animate_with_anima_easing'
-#	elif easing_points is Callable:
-#		use_method = 'animate_with_easing_callable'
+	match typeof(easing_points):
+		TYPE_ARRAY:
+			use_method = 'animate_with_easing'
+		TYPE_STRING:
+			use_method = 'animate_with_anima_easing'
+		TYPE_CALLABLE:
+			use_method = 'animate_with_easing_callable'
 
 	var from := 0.0 if play_mode == PLAY_MODE.NORMAL else 1.0
 	var to := 1.0 - from
 
 	object.set_animation_data(animation_data, property_data, is_backwards_animation, _visibility_strategy)
 	var callable := Callable(object, use_method)
+
+	if animation_data.has("__debug"):
+		prints("Using method", use_method, typeof(easing_points))
 
 	_tween.chain().tween_interval(animation_data._wait_time)
 	_tween.tween_method(
@@ -685,16 +688,20 @@ class AnimatedItem extends Node:
 		animate(elapsed)
 
 	func _cubic_bezier(p0: Vector2, p1: Vector2, p2: Vector2, p3: Vector2, t: float) -> float:
-#		var q0 = p0.linear_interpolate(p1, t)
-#		var q1 = p1.linear_interpolate(p2, t)
-#		var q2 = p2.linear_interpolate(p3, t)
+#		var a = Vector2.ZERO.cubic_interpolate(p1, p2, p3, t)
 #
-#		var r0 = q0.linear_interpolate(q1, t)
-#		var r1 = q1.linear_interpolate(q2, t)
-#
-#		var s = r0.linear_interpolate(r1, t)
+#		print(a.abs())
+#		return a.length_squared()
+		var q0 = p0.lerp(p1, t)
+		var q1 = p1.lerp(p2, t)
+		var q2 = p2.lerp(p3, t)
 
-		return t
+		var r0 = q0.lerp(q1, t)
+		var r1 = q1.lerp(q2, t)
+
+		var s = r0.lerp(r1, t)
+
+		return s
 
 	func _execute_callback(callback) -> void:
 		var fn: Callable

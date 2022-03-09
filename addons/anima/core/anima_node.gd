@@ -144,7 +144,7 @@ func set_single_shot(single_shot: bool) -> void:
 	_is_single_shot = single_shot
 
 	if _is_single_shot:
-		_anima_tween.set_loop(0)
+		_anima_tween.set_loops(1)
 
 func is_single_shot() -> bool:
 	return _is_single_shot
@@ -200,7 +200,6 @@ func _play(mode: int, delay: float = 0.0, speed := 1.0) -> void:
 	var wait_time = max(Anima.MINIMUM_DURATION, delay)
 	await get_tree().create_timer(wait_time)
 
-func _on_timer_completed() -> void:
 	_do_play()
 	_maybe_play()
 
